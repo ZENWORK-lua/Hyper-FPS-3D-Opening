@@ -1,4 +1,4 @@
--- [[ HYPER|HUB - 3D MASCOT INTRO (REWORKED & FIXED RE-EXECUTE FLOW) ]]
+-- [[ HYPER|HUB - 3D MASCOT INTRO (REWORKED & OPTIMIZED) ]]
 local Players = game:GetService("Players")
 local TweenService = game:GetService("TweenService")
 local Chat = game:GetService("Chat")
@@ -27,12 +27,12 @@ if _G.HyperPetActive then
         if _G.HyperExecuteCount == 1 then
             if _G.HyperPetHead then Chat:Chat(_G.HyperPetHead, "i tought i already executed the script...", Enum.ChatColor.White) end
             if _G.TriggerBounceFunc then _G.TriggerBounceFunc() end
-            task.wait(1.5)
+            task.wait(1.2)
         elseif _G.HyperExecuteCount == 2 then
             if _G.HyperPetHead then Chat:Chat(_G.HyperPetHead, "Do you even hear what i say?", Enum.ChatColor.Red) end
             if _G.SetRedHornsFunc then _G.SetRedHornsFunc() end
             if _G.TriggerBounceFunc then _G.TriggerBounceFunc() end
-            task.wait(1.5)
+            task.wait(1.2)
         elseif _G.HyperExecuteCount >= 3 then
             if _G.SetRedHornsFunc then _G.SetRedHornsFunc() end
             if _G.SetBloodEyesFunc then _G.SetBloodEyesFunc() end
@@ -118,10 +118,10 @@ if _G.HyperPetActive then
                 end
             end)
 
-            -- 4.5. SANİYEDE YÜKSEK SESLİ JUMPSCARE SESİ
+            -- 4.5 SANİYEDE YÜKSEK SESLİ JUMPSCARE TETİKLEMESİ
             task.delay(4.5, function()
                 local jumpscareSound = Instance.new("Sound")
-                jumpscareSound.SoundId = "rbxassetid://9069609267"
+                jumpscareSound.SoundId = "rbxassetid://9069609267" -- Ani korku / screams efekti
                 jumpscareSound.Volume = 10
                 jumpscareSound.Parent = SoundService
                 jumpscareSound:Play()
@@ -228,14 +228,15 @@ petModel.Parent = workspace
 -- TAKİP SİSTEMİ VE YERDEN ÇIKMA ANİMASYONU
 local isFollowing = true
 local targetPos = hrp.Position + (hrp.CFrame.LookVector * 4.5) + Vector3.new(0, 1.2, 0)
-local currentPetPos = targetPos - Vector3.new(0, 6, 0)
+local currentPetPos = targetPos - Vector3.new(0, 6, 0) -- Yerin altından başla
 local bounceOffsetY = 0
 local isSpawning = true
 
+-- Yer altından çıkış / Esneme Büyüme Animasyonu (Tween)
 task.spawn(function()
-    head.Size = Vector3.new(0.2, 0.2, 0.2)
+    head.Size = Vector3.new(0.2, 0.2, 0.2) -- Başlangıçta küçük
     local targetHeadSize = Vector3.new(2.4, 2.4, 2.4)
-    local stretchHeadSize = Vector3.new(1.8, 3.2, 1.8)
+    local stretchHeadSize = Vector3.new(1.8, 3.2, 1.8) -- Dikey esneme boyutu
 
     local spawnPosValue = Instance.new("Vector3Value")
     spawnPosValue.Value = currentPetPos
@@ -244,6 +245,7 @@ task.spawn(function()
         currentPetPos = val
     end)
 
+    -- 1. Aşama: Yerin altından esneyerek hızlıca yukarı fırlama
     local posTween = TweenService:Create(spawnPosValue, TweenInfo.new(0.8, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {Value = targetPos})
     local sizeTween = TweenService:Create(head, TweenInfo.new(0.5, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Size = stretchHeadSize})
     
@@ -251,6 +253,7 @@ task.spawn(function()
     sizeTween:Play()
     
     task.wait(0.5)
+    -- 2. Aşama: Esnemeden normal boyutuna oturma (Elastic yerleşme)
     local normalizeSizeTween = TweenService:Create(head, TweenInfo.new(0.4, Enum.EasingStyle.Elastic, Enum.EasingDirection.Out), {Size = targetHeadSize})
     normalizeSizeTween:Play()
     
@@ -301,9 +304,9 @@ local function waitUnpaused(duration)
     end
 end
 
--- İLK ÇALIŞTIRMA SİNEMATİK AKIŞI
+-- SİNEMATİK AKIŞ
 task.spawn(function()
-    waitUnpaused(0.9)
+    waitUnpaused(0.9) -- Doğma animasyonunun bitmesini bekle
 
     while _G.HyperPause do task.wait(0.1) end
     pcall(function() Chat:Chat(head, "hi, thank you for trying Hyper|FPS", Enum.ChatColor.White) end)
@@ -373,11 +376,14 @@ task.spawn(function()
         canClick = false
         overlay:Destroy()
 
+        -- [[ ANA HYPER|FPS SCRİPTİNE TETİK SİNYALİ VERİLDİ ]]
         _G.HyperMainStart = true
 
         pcall(function() Chat:Chat(head, "enjoy using the script!", Enum.ChatColor.White) end)
         triggerSmoothBounce()
-        
+        _G.HyperMainStart = true 
+
+        -- MASKOTU YUMUŞAKÇA SİLME
         task.wait(1.5)
         isFollowing = false
         if followConn then followConn:Disconnect() end
