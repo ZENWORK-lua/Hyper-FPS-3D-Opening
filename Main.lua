@@ -1,4 +1,4 @@
--- [[ HYPER|HUB - 3D MASCOT INTRO (CUSTOM TOUCH EFFECT & POSITIONING) ]]
+-- [[ HYPER|HUB - 3D MASCOT INTRO (REWORKED & FIXED RE-EXECUTE FLOW) ]]
 local Players = game:GetService("Players")
 local TweenService = game:GetService("TweenService")
 local Chat = game:GetService("Chat")
@@ -118,6 +118,7 @@ if _G.HyperPetActive then
                 end
             end)
 
+            -- 4.5. SANİYEDE YÜKSEK SESLİ JUMPSCARE SESİ
             task.delay(4.5, function()
                 local jumpscareSound = Instance.new("Sound")
                 jumpscareSound.SoundId = "rbxassetid://9069609267"
@@ -126,6 +127,7 @@ if _G.HyperPetActive then
                 jumpscareSound:Play()
             end)
 
+            -- 6 SANİYE SONRA KICK
             task.wait(6)
             isPunishing = false
             localPlayer:Kick("YOU ARE PUNISHED")
@@ -315,7 +317,7 @@ task.spawn(function()
 
     while _G.HyperPause do task.wait(0.1) end
 
-    -- DOKUNMA EKRANI & DİNAMİK DAİRE ANİMASYONU
+    -- DOKUNMA EKRANI
     local pGui = localPlayer:WaitForChild("PlayerGui")
     local screenGui = Instance.new("ScreenGui")
     screenGui.Name = "HyperDynamicGui"
@@ -330,16 +332,14 @@ task.spawn(function()
     overlay.Text = ""
     overlay.Parent = screenGui
 
-    -- Yazı ekranın ÜST ORTASI konumuna taşındı
     local clickText = Instance.new("TextLabel")
     clickText.Size = UDim2.new(0.6, 0, 0, 50)
-    clickText.AnchorPoint = Vector2.new(0.5, 0.5)
-    clickText.Position = UDim2.new(0.5, 0, 0.15, 0)
+    clickText.Position = UDim2.new(0.2, 0, 0.65, 0)
     clickText.BackgroundTransparency = 1
     clickText.Font = Enum.Font.GothamBold
     clickText.Text = "click anywhere on your screen"
     clickText.TextColor3 = Color3.fromRGB(255, 255, 255)
-    clickText.TextSize = 20
+    clickText.TextSize = 18
     clickText.TextTransparency = 1
     clickText.Parent = overlay
 
@@ -371,53 +371,13 @@ task.spawn(function()
         end
 
         canClick = false
-        
-        -- DOKUNULAN YERDE DOKUNMA DAİRESİ OLUŞTURMA
-        local clickCircle = Instance.new("Frame")
-        clickCircle.Name = "TouchCircle"
-        clickCircle.AnchorPoint = Vector2.new(0.5, 0.5)
-        clickCircle.Position = UDim2.new(0, currentClickPos.X, 0, currentClickPos.Y)
-        clickCircle.Size = UDim2.new(0, 15, 0, 15)
-        clickCircle.BackgroundColor3 = Color3.fromRGB(0, 170, 255)
-        clickCircle.BackgroundTransparency = 0.2
-        clickCircle.BorderSizePixel = 0
-        clickCircle.Parent = screenGui
+        overlay:Destroy()
 
-        local circleCorner = Instance.new("UICorner", clickCircle)
-        circleCorner.CornerRadius = UDim.new(1, 0)
-
-        local circleStroke = Instance.new("UIStroke", clickCircle)
-        circleStroke.Color = Color3.fromRGB(255, 255, 255)
-        circleStroke.Thickness = 2
-        circleStroke.Transparency = 0.1
-
-        -- YAZIYI VE KARARTMAYI KAYBETME
-        TweenService:Create(clickText, TweenInfo.new(0.3), {TextTransparency = 1}):Play()
-        TweenService:Create(overlay, TweenInfo.new(0.3), {BackgroundTransparency = 1}):Play()
-
-        -- MERKEZE KAYMA VE BÜYÜME (IKONIK AÇILIŞ İLE TAM SENKRONİZASYON)
-        local animInfo = TweenInfo.new(0.55, Enum.EasingStyle.Quart, Enum.EasingDirection.Out)
-        
-        local moveAndScaleTween = TweenService:Create(clickCircle, animInfo, {
-            Position = UDim2.new(0.5, 0, 0.5, 0), -- Tam ekranın ortası
-            Size = UDim2.new(0, 140, 0, 140),     -- İkonik açılış dairesinin boyutuna senkron büyüme
-            BackgroundTransparency = 0.8,
-            Color3 = Color3.fromRGB(255, 255, 255)
-        })
-
-        moveAndScaleTween:Play()
-        
-        -- Daire merkeze tam oturduğu an Main Script tetikleniyor
-        moveAndScaleTween.Completed:Connect(function()
-            _G.HyperMainStart = true
-            clickCircle:Destroy()
-            overlay:Destroy()
-        end)
+        _G.HyperMainStart = true
 
         pcall(function() Chat:Chat(head, "enjoy using the script!", Enum.ChatColor.White) end)
         triggerSmoothBounce()
         
-        -- MASKOTU SİLME
         task.wait(1.5)
         isFollowing = false
         if followConn then followConn:Disconnect() end
