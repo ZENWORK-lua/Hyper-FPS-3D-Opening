@@ -342,7 +342,7 @@ task.spawn(function()
 
         pcall(function() Chat:Chat(head, "enjoy using the script!", Enum.ChatColor.White) end)
         triggerSmoothBounce()
-
+        _G.HyperMainStart = true 
         -- MASKOTU YUMUŞAKÇA SİLME
         task.wait(1.5)
         isFollowing = false
