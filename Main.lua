@@ -81,7 +81,7 @@ if _G.HyperPetActive then
             redOverlay.BackgroundTransparency = 0.55
             redOverlay.Parent = punishGui
 
-            local words = {"RUN", "HIDE", "ITS COMING", "PUNISHMENT", "NO ESCAPE"}
+            local words = {"RUN", "HIDE", "ITS COMING", "PUNISHMENT", "IT'S TOO LATE"}
             local isPunishing = true
 
             task.spawn(function()
@@ -123,7 +123,7 @@ if _G.HyperPetActive then
                 end
             end)
 
-            task.wait(30)
+            task.wait(15)
             isPunishing = false
             localPlayer:Kick("YOU ARE PUNISHED")
         end
