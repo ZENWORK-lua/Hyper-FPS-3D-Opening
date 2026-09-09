@@ -1,4 +1,4 @@
--- [[ HYPER|HUB - 3D MASCOT INTRO (CLEANED & READY FOR HYPER|FPS) ]]
+-- [[ HYPER|HUB - 3D MASCOT INTRO (REWORKED & OPTIMIZED) ]]
 local Players = game:GetService("Players")
 local TweenService = game:GetService("TweenService")
 local Chat = game:GetService("Chat")
@@ -15,7 +15,7 @@ _G.HyperExecuteCount = _G.HyperExecuteCount or 0
 _G.HyperInCooldown = _G.HyperInCooldown or false
 _G.HyperPause = _G.HyperPause or false
 
--- SPAM / CEZA KONTROLÜ
+-- SPAM / RE-EXECUTE VE CEZA KONTROLÜ
 if _G.HyperPetActive then
     if _G.HyperInCooldown then return end
     
@@ -25,24 +25,19 @@ if _G.HyperPetActive then
 
     task.spawn(function()
         if _G.HyperExecuteCount == 1 then
-            if _G.HyperPetHead then Chat:Chat(_G.HyperPetHead, "Hey! I'm here no need to try again!", Enum.ChatColor.White) end
+            if _G.HyperPetHead then Chat:Chat(_G.HyperPetHead, "i tought i already executed the script...", Enum.ChatColor.White) end
             if _G.TriggerBounceFunc then _G.TriggerBounceFunc() end
             task.wait(1.2)
         elseif _G.HyperExecuteCount == 2 then
-            if _G.HyperPetHead then Chat:Chat(_G.HyperPetHead, "Didn't i said im here? No need to execute again!", Enum.ChatColor.White) end
-            if _G.TriggerBounceFunc then _G.TriggerBounceFunc() end
-            task.wait(1.2)
-        elseif _G.HyperExecuteCount == 3 then
-            if _G.HyperPetHead then Chat:Chat(_G.HyperPetHead, "do you even hear me?!", Enum.ChatColor.Red) end
+            if _G.HyperPetHead then Chat:Chat(_G.HyperPetHead, "Do you even hear what i say?", Enum.ChatColor.Red) end
             if _G.SetRedHornsFunc then _G.SetRedHornsFunc() end
-            if _G.SetBloodEyesFunc then _G.SetBloodEyesFunc() end
             if _G.TriggerBounceFunc then _G.TriggerBounceFunc() end
             task.wait(1.2)
-        elseif _G.HyperExecuteCount >= 4 then
+        elseif _G.HyperExecuteCount >= 3 then
             if _G.SetRedHornsFunc then _G.SetRedHornsFunc() end
             if _G.SetBloodEyesFunc then _G.SetBloodEyesFunc() end
             
-            if _G.HyperPetHead then Chat:Chat(_G.HyperPetHead, "it was your last chance...", Enum.ChatColor.Red) end
+            if _G.HyperPetHead then Chat:Chat(_G.HyperPetHead, "you dont learn don't you...?!", Enum.ChatColor.Red) end
             if _G.TriggerBounceFunc then _G.TriggerBounceFunc() end
             task.wait(1.5)
 
@@ -123,7 +118,17 @@ if _G.HyperPetActive then
                 end
             end)
 
-            task.wait(15)
+            -- 4.5 SANİYEDE YÜKSEK SESLİ JUMPSCARE TETİKLEMESİ
+            task.delay(4.5, function()
+                local jumpscareSound = Instance.new("Sound")
+                jumpscareSound.SoundId = "rbxassetid://9069609267" -- Ani korku / screams efekti
+                jumpscareSound.Volume = 10
+                jumpscareSound.Parent = SoundService
+                jumpscareSound:Play()
+            end)
+
+            -- 6 SANİYE SONRA KICK
+            task.wait(6)
             isPunishing = false
             localPlayer:Kick("YOU ARE PUNISHED")
         end
@@ -220,16 +225,50 @@ end
 
 petModel.Parent = workspace
 
--- TAKİP SİSTEMİ
+-- TAKİP SİSTEMİ VE YERDEN ÇIKMA ANİMASYONU
 local isFollowing = true
-local currentPetPos = hrp.Position + (hrp.CFrame.LookVector * 4.5) + Vector3.new(0, 1.2, 0)
+local targetPos = hrp.Position + (hrp.CFrame.LookVector * 4.5) + Vector3.new(0, 1.2, 0)
+local currentPetPos = targetPos - Vector3.new(0, 6, 0) -- Yerin altından başla
 local bounceOffsetY = 0
+local isSpawning = true
+
+-- Yer altından çıkış / Esneme Büyüme Animasyonu (Tween)
+task.spawn(function()
+    head.Size = Vector3.new(0.2, 0.2, 0.2) -- Başlangıçta küçük
+    local targetHeadSize = Vector3.new(2.4, 2.4, 2.4)
+    local stretchHeadSize = Vector3.new(1.8, 3.2, 1.8) -- Dikey esneme boyutu
+
+    local spawnPosValue = Instance.new("Vector3Value")
+    spawnPosValue.Value = currentPetPos
+    
+    spawnPosValue.Changed:Connect(function(val)
+        currentPetPos = val
+    end)
+
+    -- 1. Aşama: Yerin altından esneyerek hızlıca yukarı fırlama
+    local posTween = TweenService:Create(spawnPosValue, TweenInfo.new(0.8, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {Value = targetPos})
+    local sizeTween = TweenService:Create(head, TweenInfo.new(0.5, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Size = stretchHeadSize})
+    
+    posTween:Play()
+    sizeTween:Play()
+    
+    task.wait(0.5)
+    -- 2. Aşama: Esnemeden normal boyutuna oturma (Elastic yerleşme)
+    local normalizeSizeTween = TweenService:Create(head, TweenInfo.new(0.4, Enum.EasingStyle.Elastic, Enum.EasingDirection.Out), {Size = targetHeadSize})
+    normalizeSizeTween:Play()
+    
+    posTween.Completed:Wait()
+    spawnPosValue:Destroy()
+    isSpawning = false
+end)
 
 local followConn
 followConn = RunService.RenderStepped:Connect(function()
     if not isFollowing or not hrp or not hrp.Parent then return end
-    local targetPos = hrp.Position + (hrp.CFrame.LookVector * 4.5) + Vector3.new(0, 1.2, 0)
-    currentPetPos = currentPetPos:Lerp(targetPos, 0.1)
+    if not isSpawning then
+        local tPos = hrp.Position + (hrp.CFrame.LookVector * 4.5) + Vector3.new(0, 1.2, 0)
+        currentPetPos = currentPetPos:Lerp(tPos, 0.1)
+    end
     local lookCF = CFrame.new(currentPetPos + Vector3.new(0, bounceOffsetY, 0), hrp.Position)
     updatePetCFrame(lookCF)
 end)
@@ -267,7 +306,7 @@ end
 
 -- SİNEMATİK AKIŞ
 task.spawn(function()
-    waitUnpaused(0.5)
+    waitUnpaused(0.9) -- Doğma animasyonunun bitmesini bekle
 
     while _G.HyperPause do task.wait(0.1) end
     pcall(function() Chat:Chat(head, "hi, thank you for trying Hyper|FPS", Enum.ChatColor.White) end)
@@ -343,6 +382,7 @@ task.spawn(function()
         pcall(function() Chat:Chat(head, "enjoy using the script!", Enum.ChatColor.White) end)
         triggerSmoothBounce()
         _G.HyperMainStart = true 
+
         -- MASKOTU YUMUŞAKÇA SİLME
         task.wait(1.5)
         isFollowing = false
