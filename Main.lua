@@ -1,0 +1,455 @@
+-- [[ HYPER|HUB - PART 1: ATMOSPHERIC PUNISHMENT & ANTI-SPAM ]]
+local Players = game:GetService("Players")
+local TweenService = game:GetService("TweenService")
+local Chat = game:GetService("Chat")
+local RunService = game:GetService("RunService")
+local UserInputService = game:GetService("UserInputService")
+local SoundService = game:GetService("SoundService")
+local Lighting = game:GetService("Lighting")
+
+local localPlayer = Players.LocalPlayer
+local character = localPlayer.Character or localPlayer.CharacterAdded:Wait()
+local hrp = character:WaitForChild("HumanoidRootPart")
+
+_G.HyperExecuteCount = _G.HyperExecuteCount or 0
+_G.HyperInCooldown = _G.HyperInCooldown or false
+_G.HyperPause = _G.HyperPause or false
+
+-- ÇİFT EXECUTE & SPAM SİSTEMİ
+if _G.HyperPetActive then
+    if _G.HyperInCooldown then return end
+    
+    _G.HyperExecuteCount = _G.HyperExecuteCount + 1
+    _G.HyperInCooldown = true
+    _G.HyperPause = true
+
+    task.spawn(function()
+        if _G.HyperExecuteCount == 1 then
+            if _G.HyperPetHead then Chat:Chat(_G.HyperPetHead, "Hey! I'm here no need to try again!", Enum.ChatColor.White) end
+            if _G.TriggerBounceFunc then _G.TriggerBounceFunc() end
+            task.wait(1.2)
+        elseif _G.HyperExecuteCount == 2 then
+            if _G.HyperPetHead then Chat:Chat(_G.HyperPetHead, "Didn't i said im here? No need to execute again!", Enum.ChatColor.White) end
+            if _G.TriggerBounceFunc then _G.TriggerBounceFunc() end
+            task.wait(1.2)
+        elseif _G.HyperExecuteCount == 3 then
+            if _G.HyperPetHead then Chat:Chat(_G.HyperPetHead, "do you even hear me?!", Enum.ChatColor.Red) end
+            if _G.SetRedHornsFunc then _G.SetRedHornsFunc() end
+            if _G.SetBloodEyesFunc then _G.SetBloodEyesFunc() end
+            if _G.TriggerBounceFunc then _G.TriggerBounceFunc() end
+            task.wait(1.2)
+        elseif _G.HyperExecuteCount >= 4 then
+            -- KANLI ATMOSFER, KAN ÇANAĞI GÖZLER & 30 SANİYE OOF SPAMI
+            if _G.SetRedHornsFunc then _G.SetRedHornsFunc() end
+            if _G.SetBloodEyesFunc then _G.SetBloodEyesFunc() end
+            
+            if _G.HyperPetHead then Chat:Chat(_G.HyperPetHead, "it was your last chance...", Enum.ChatColor.Red) end
+            if _G.TriggerBounceFunc then _G.TriggerBounceFunc() end
+            task.wait(1.5)
+
+            -- 1. ATMOSFER: KAN KIRMIZI GÖKYÜZÜ, SİYAH BULUTLAR VE YOĞUN SİS
+            pcall(function()
+                Lighting.Ambient = Color3.fromRGB(200, 0, 0)
+                Lighting.OutdoorAmbient = Color3.fromRGB(255, 0, 0)
+                Lighting.FogColor = Color3.fromRGB(15, 0, 0)
+                Lighting.FogEnd = 60
+                Lighting.FogStart = 0
+                
+                local sky = Lighting:FindFirstChildOfClass("Sky") or Instance.new("Sky", Lighting)
+                sky.SkyboxBk = "rbxassetid://2634494"
+                sky.SkyboxDn = "rbxassetid://2634494"
+                sky.SkyboxFt = "rbxassetid://2634494"
+                sky.SkyboxLf = "rbxassetid://2634494"
+                sky.SkyboxRt = "rbxassetid://2634494"
+                sky.SkyboxUp = "rbxassetid://2634494"
+            end)
+
+            -- CIZIRTI / STATİK SES
+            local staticSound = Instance.new("Sound")
+            staticSound.SoundId = "rbxassetid://9114223178"
+            staticSound.Volume = 4
+            staticSound.Looped = true
+            staticSound.Parent = SoundService
+            staticSound:Play()
+
+            -- 2. EKRAN KAPLAMA VE KELİME SPAM SİSTEMİ
+            local pGui = localPlayer:WaitForChild("PlayerGui")
+            local punishGui = Instance.new("ScreenGui")
+            punishGui.Name = "HyperPunishGui"
+            punishGui.ResetOnSpawn = false
+            punishGui.Parent = pGui
+
+            local redOverlay = Instance.new("Frame")
+            redOverlay.Size = UDim2.new(1, 0, 1, 0)
+            redOverlay.BackgroundColor3 = Color3.fromRGB(150, 0, 0)
+            redOverlay.BackgroundTransparency = 0.55
+            redOverlay.Parent = punishGui
+
+            local words = {"RUN", "HIDE", "ITS COMING", "PUNISHMENT", "NO ESCAPE"}
+            local isPunishing = true
+
+            -- 30 SANİYE BOYUNCA MAKSİMUM SESLE OOF SPAMI
+            task.spawn(function()
+                while isPunishing do
+                    local oof = Instance.new("Sound")
+                    oof.SoundId = "rbxassetid://5143383166"
+                    oof.Volume = 10 -- Maksimum Ses
+                    oof.Parent = SoundService
+                    oof:Play()
+                    game:GetService("Debris"):AddItem(oof, 1.5)
+                    task.wait(0.09)
+                end
+            end)
+
+            -- 30 SANİYE BOYUNCA EKRANDA GEZEN TITREŞEN YAZILAR
+            task.spawn(function()
+                while isPunishing do
+                    local txtLbl = Instance.new("TextLabel")
+                    txtLbl.Size = UDim2.new(0, 250, 0, 60)
+                    txtLbl.Position = UDim2.new(math.random(5, 75)/100, 0, math.random(5, 75)/100, 0)
+                    txtLbl.BackgroundTransparency = 1
+                    txtLbl.Font = Enum.Font.GothamBlack
+                    txtLbl.Text = words[math.random(1, #words)]
+                    txtLbl.TextColor3 = Color3.fromRGB(255, 0, 0)
+                    txtLbl.TextSize = math.random(32, 55)
+                    txtLbl.Parent = punishGui
+
+                    local stroke = Instance.new("UIStroke", txtLbl)
+                    stroke.Color = Color3.fromRGB(0, 0, 0)
+                    stroke.Thickness = 3
+
+                    task.spawn(function()
+                        for i = 1, 10 do
+                            txtLbl.Position = txtLbl.Position + UDim2.new(0, math.random(-10, 10), 0, math.random(-10, 10))
+                            task.wait(0.03)
+                        end
+                        txtLbl:Destroy()
+                    end)
+                    task.wait(0.08)
+                end
+            end)
+
+            -- 30 SANİYE BEKLEME VE OYUNDAN ATILMA
+            task.wait(30)
+            isPunishing = false
+            localPlayer:Kick("YOU ARE PUNISHED")
+        end
+        
+        _G.HyperInCooldown = false
+        _G.HyperPause = false
+    end)
+    return
+end
+
+_G.HyperPetActive = true
+
+-- MASKOT OLUŞTURMA
+local petModel = Instance.new("Model")
+petModel.Name = "HyperPet"
+_G.HyperPetModel = petModel
+
+local head = Instance.new("Part")
+head.Name = "Head"
+head.Shape = Enum.PartType.Ball
+head.Size = Vector3.new(2.4, 2.4, 2.4)
+head.Color = Color3.fromRGB(30, 30, 38)
+head.Material = Enum.Material.Sand
+head.CanCollide = false
+head.Anchored = true
+head.Parent = petModel
+petModel.PrimaryPart = head
+
+_G.HyperPetHead = head
+
+local function createHornPart(size, color, mat)
+    local p = Instance.new("WedgePart")
+    p.Size = size
+    p.Color = color
+    p.Material = mat
+    p.CanCollide = false
+    p.Anchored = true
+    p.Parent = petModel
+    return p
+end
+
+local hBaseL = createHornPart(Vector3.new(0.3, 0.9, 0.6), Color3.fromRGB(0, 162, 255), Enum.Material.Glass)
+local hTipL = createHornPart(Vector3.new(0.2, 0.7, 0.4), Color3.fromRGB(0, 215, 255), Enum.Material.Neon)
+local hBaseR = createHornPart(Vector3.new(0.3, 0.9, 0.6), Color3.fromRGB(0, 162, 255), Enum.Material.Glass)
+local hTipR = createHornPart(Vector3.new(0.2, 0.7, 0.4), Color3.fromRGB(0, 215, 255), Enum.Material.Neon)
+
+_G.SetRedHornsFunc = function()
+    hBaseL.Color = Color3.fromRGB(255, 0, 0)
+    hTipL.Color = Color3.fromRGB(255, 50, 50)
+    hBaseR.Color = Color3.fromRGB(255, 0, 0)
+    hTipR.Color = Color3.fromRGB(255, 50, 50)
+end
+
+local eyeGUI = Instance.new("SurfaceGui")
+eyeGUI.Face = Enum.NormalId.Front
+eyeGUI.SizingMode = Enum.SurfaceGuiSizingMode.PixelsPerStud
+eyeGUI.PixelsPerStud = 50
+eyeGUI.Parent = head
+
+local eyeFrame = Instance.new("Frame")
+eyeFrame.Size = UDim2.new(1, 0, 1, 0)
+eyeFrame.BackgroundTransparency = 1
+eyeFrame.Parent = eyeGUI
+
+local eyeL, eyeR
+
+local function createBigHappyEye(isLeft)
+    local eye = Instance.new("Frame")
+    eye.Size = UDim2.new(0, 34, 0, 20)
+    eye.Position = isLeft and UDim2.new(0.18, 0, 0.35, 0) or UDim2.new(0.62, 0, 0.35, 0)
+    eye.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+    eye.BorderSizePixel = 0
+    eye.Parent = eyeFrame
+    Instance.new("UICorner", eye).CornerRadius = UDim.new(0.8, 0)
+    return eye
+end
+
+eyeL = createBigHappyEye(true)
+eyeR = createBigHappyEye(false)
+
+_G.SetBloodEyesFunc = function()
+    if eyeL and eyeR then
+        eyeL.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
+        eyeR.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
+    end
+end
+
+local function updatePetCFrame(cf)
+    head.CFrame = cf
+    hBaseL.CFrame = cf * CFrame.new(-0.75, 0.95, 0.25) * CFrame.Angles(math.rad(-40), math.rad(-5), math.rad(-12))
+    hTipL.CFrame = hBaseL.CFrame * CFrame.new(0, 0.6, 0.2) * CFrame.Angles(math.rad(-25), 0, 0)
+    hBaseR.CFrame = cf * CFrame.new(0.75, 0.95, 0.25) * CFrame.Angles(math.rad(-40), math.rad(5), math.rad(12))
+    hTipR.CFrame = hBaseR.CFrame * CFrame.new(0, 0.6, 0.2) * CFrame.Angles(math.rad(-25), 0, 0)
+end
+
+petModel.Parent = workspace
+-- [[ HYPER|HUB - PART 2: TOUCH & DRAGGABLE MENU SYSTEM ]]
+local isFollowing = true
+local currentPetPos = hrp.Position + (hrp.CFrame.LookVector * 4.5) + Vector3.new(0, 1.2, 0)
+local bounceOffsetY = 0
+
+local followConn
+followConn = RunService.RenderStepped:Connect(function()
+    if not isFollowing or not hrp or not hrp.Parent then return end
+    local targetPos = hrp.Position + (hrp.CFrame.LookVector * 4.5) + Vector3.new(0, 1.2, 0)
+    currentPetPos = currentPetPos:Lerp(targetPos, 0.1)
+    local lookCF = CFrame.new(currentPetPos + Vector3.new(0, bounceOffsetY, 0), hrp.Position)
+    updatePetCFrame(lookCF)
+end)
+
+local function triggerSmoothBounce()
+    task.spawn(function()
+        task.wait(0.2)
+        local startTime = os.clock()
+        while os.clock() - startTime < 1.5 do
+            local elapsed = os.clock() - startTime
+            bounceOffsetY = math.abs(math.sin(elapsed * 7)) * 0.65
+            task.wait(0.015)
+        end
+        local tweenVal = Instance.new("NumberValue")
+        tweenVal.Value = bounceOffsetY
+        tweenVal.Changed:Connect(function(val) bounceOffsetY = val end)
+        local tw = TweenService:Create(tweenVal, TweenInfo.new(0.3), {Value = 0})
+        tw:Play()
+        tw.Completed:Wait()
+        tweenVal:Destroy()
+    end)
+end
+
+_G.TriggerBounceFunc = triggerSmoothBounce
+
+local function waitUnpaused(duration)
+    local timer = 0
+    while timer < duration do
+        if not _G.HyperPause then
+            timer = timer + 0.1
+        end
+        task.wait(0.1)
+    end
+end
+
+-- SİNEMATİK AKIŞ
+task.spawn(function()
+    waitUnpaused(0.5)
+
+    while _G.HyperPause do task.wait(0.1) end
+    pcall(function() Chat:Chat(head, "hi, thank you for trying Hyper|FPS", Enum.ChatColor.White) end)
+    triggerSmoothBounce()
+    waitUnpaused(2.2)
+
+    while _G.HyperPause do task.wait(0.1) end
+    pcall(function() Chat:Chat(head, "i will need you to click anywhere on your screen now", Enum.ChatColor.White) end)
+    triggerSmoothBounce()
+    waitUnpaused(1.2)
+
+    while _G.HyperPause do task.wait(0.1) end
+
+    -- DOKUNMA EKRANI
+    local pGui = localPlayer:WaitForChild("PlayerGui")
+    local screenGui = Instance.new("ScreenGui")
+    screenGui.Name = "HyperDynamicGui"
+    screenGui.ResetOnSpawn = false
+    screenGui.Parent = pGui
+
+    local overlay = Instance.new("TextButton")
+    overlay.Size = UDim2.new(2, 0, 2, 0)
+    overlay.Position = UDim2.new(-0.5, 0, -0.5, 0)
+    overlay.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+    overlay.BackgroundTransparency = 1
+    overlay.Text = ""
+    overlay.Parent = screenGui
+
+    local clickText = Instance.new("TextLabel")
+    clickText.Size = UDim2.new(0.6, 0, 0, 50)
+    clickText.Position = UDim2.new(0.2, 0, 0.65, 0)
+    clickText.BackgroundTransparency = 1
+    clickText.Font = Enum.Font.GothamBold
+    clickText.Text = "click anywhere on your screen"
+    clickText.TextColor3 = Color3.fromRGB(255, 255, 255)
+    clickText.TextSize = 18
+    clickText.TextTransparency = 1
+    clickText.Parent = overlay
+
+    TweenService:Create(overlay, TweenInfo.new(0.6), {BackgroundTransparency = 0.5}):Play()
+    TweenService:Create(clickText, TweenInfo.new(0.6), {TextTransparency = 0}):Play()
+
+    local canClick = true
+    local pressStartTime = 0
+    local startPressPos = Vector2.new()
+
+    overlay.InputBegan:Connect(function(input)
+        if not canClick then return end
+        if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+            pressStartTime = os.clock()
+            startPressPos = Vector2.new(input.Position.X, input.Position.Y)
+        end
+    end)
+
+    overlay.Activated:Connect(function(inputObject)
+        if not canClick then return end
+        
+        local pressDuration = os.clock() - pressStartTime
+        local currentClickPos = inputObject and inputObject.Position or UserInputService:GetMouseLocation()
+        local dragDistance = (Vector2.new(currentClickPos.X, currentClickPos.Y) - startPressPos).Magnitude
+
+        if pressStartTime > 0 and (pressDuration > 0.4 or dragDistance > 30) then
+            pressStartTime = 0
+            return
+        end
+
+        canClick = false
+        local clickX = currentClickPos.X
+        local clickY = currentClickPos.Y
+
+        overlay:Destroy()
+
+        pcall(function() Chat:Chat(head, "enjoy using the script!", Enum.ChatColor.White) end)
+        triggerSmoothBounce()
+
+        -- TIKLANAN NOKTADA AÇILAN ORTA MENÜ
+        local menuFrame = Instance.new("Frame")
+        menuFrame.Name = "DynamicMenu"
+        menuFrame.Size = UDim2.new(0, 0, 0, 0)
+        menuFrame.Position = UDim2.new(0, clickX, 0, clickY)
+        menuFrame.AnchorPoint = Vector2.new(0.5, 0.5)
+        menuFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 28)
+        menuFrame.BackgroundTransparency = 0.2
+        menuFrame.Parent = screenGui
+        Instance.new("UICorner", menuFrame).CornerRadius = UDim.new(0, 12)
+
+        local stroke = Instance.new("UIStroke", menuFrame)
+        stroke.Color = Color3.fromRGB(0, 162, 255)
+        stroke.Thickness = 1.5
+
+        local testLabel = Instance.new("TextLabel")
+        testLabel.Size = UDim2.new(1, -40, 0, 30)
+        testLabel.Position = UDim2.new(0, 12, 0, 10)
+        testLabel.BackgroundTransparency = 1
+        testLabel.Font = Enum.Font.SourceSansBold
+        testLabel.Text = "TESTING"
+        testLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+        testLabel.TextSize = 16
+        testLabel.TextXAlignment = Enum.TextXAlignment.Left
+        testLabel.Parent = menuFrame
+
+        local btnMin = Instance.new("TextButton")
+        btnMin.Size = UDim2.new(0, 26, 0, 26)
+        btnMin.Position = UDim2.new(1, -32, 0, 8)
+        btnMin.BackgroundColor3 = Color3.fromRGB(40, 40, 50)
+        btnMin.Font = Enum.Font.SourceSansBold
+        btnMin.Text = "-"
+        btnMin.TextColor3 = Color3.fromRGB(255, 255, 255)
+        btnMin.TextSize = 18
+        btnMin.Parent = menuFrame
+        Instance.new("UICorner", btnMin).CornerRadius = UDim.new(0, 6)
+
+        TweenService:Create(menuFrame, TweenInfo.new(0.4, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {
+            Size = UDim2.new(0, 220, 0, 140)
+        }):Play()
+
+        local isMinimized = false
+        btnMin.MouseButton1Click:Connect(function()
+            isMinimized = not isMinimized
+            if isMinimized then
+                TweenService:Create(menuFrame, TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+                    Size = UDim2.new(0, 220, 0, 42)
+                }):Play()
+                testLabel.Text = "TESTING (Minimized)"
+            else
+                TweenService:Create(menuFrame, TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+                    Size = UDim2.new(0, 220, 0, 140)
+                }):Play()
+                testLabel.Text = "TESTING"
+            end
+        end)
+
+        local dragging, dragStart, startPos
+        menuFrame.InputBegan:Connect(function(inp)
+            if inp.UserInputType == Enum.UserInputType.MouseButton1 or inp.UserInputType == Enum.UserInputType.Touch then
+                dragging = true
+                dragStart = inp.Position
+                startPos = menuFrame.Position
+            end
+        end)
+
+        UserInputService.InputChanged:Connect(function(inp)
+            if dragging and (inp.UserInputType == Enum.UserInputType.MouseMovement or inp.UserInputType == Enum.UserInputType.Touch) then
+                local delta = inp.Position - dragStart
+                menuFrame.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+            end
+        end)
+
+        UserInputService.InputEnded:Connect(function(inp)
+            if inp.UserInputType == Enum.UserInputType.MouseButton1 or inp.UserInputType == Enum.UserInputType.Touch then
+                dragging = false
+            end
+        end)
+
+        task.wait(1.5)
+        isFollowing = false
+        if followConn then followConn:Disconnect() end
+        
+        for _, p in ipairs(petModel:GetDescendants()) do
+            if p:IsA("BasePart") then
+                TweenService:Create(p, TweenInfo.new(0.5), {Transparency = 1}):Play()
+            end
+        end
+        task.wait(0.5)
+        petModel:Destroy()
+        
+        _G.HyperPetActive = nil
+        _G.HyperPetHead = nil
+        _G.HyperPetModel = nil
+        _G.TriggerBounceFunc = nil
+        _G.SetRedHornsFunc = nil
+        _G.SetBloodEyesFunc = nil
+        _G.HyperExecuteCount = nil
+        _G.HyperInCooldown = nil
+        _G.HyperPause = nil
+    end)
+end)
+
