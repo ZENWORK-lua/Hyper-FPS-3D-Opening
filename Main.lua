@@ -1,4 +1,4 @@
--- [[ HYPER|HUB - PART 1: ATMOSPHERIC PUNISHMENT & ANTI-SPAM ]]
+-- [[ HYPER|HUB - 3D MASCOT INTRO (CLEANED & READY FOR HYPER|FPS) ]]
 local Players = game:GetService("Players")
 local TweenService = game:GetService("TweenService")
 local Chat = game:GetService("Chat")
@@ -15,7 +15,7 @@ _G.HyperExecuteCount = _G.HyperExecuteCount or 0
 _G.HyperInCooldown = _G.HyperInCooldown or false
 _G.HyperPause = _G.HyperPause or false
 
--- ÇİFT EXECUTE & SPAM SİSTEMİ
+-- SPAM / CEZA KONTROLÜ
 if _G.HyperPetActive then
     if _G.HyperInCooldown then return end
     
@@ -39,7 +39,6 @@ if _G.HyperPetActive then
             if _G.TriggerBounceFunc then _G.TriggerBounceFunc() end
             task.wait(1.2)
         elseif _G.HyperExecuteCount >= 4 then
-            -- KANLI ATMOSFER, KAN ÇANAĞI GÖZLER & 30 SANİYE OOF SPAMI
             if _G.SetRedHornsFunc then _G.SetRedHornsFunc() end
             if _G.SetBloodEyesFunc then _G.SetBloodEyesFunc() end
             
@@ -47,7 +46,6 @@ if _G.HyperPetActive then
             if _G.TriggerBounceFunc then _G.TriggerBounceFunc() end
             task.wait(1.5)
 
-            -- 1. ATMOSFER: KAN KIRMIZI GÖKYÜZÜ, SİYAH BULUTLAR VE YOĞUN SİS
             pcall(function()
                 Lighting.Ambient = Color3.fromRGB(200, 0, 0)
                 Lighting.OutdoorAmbient = Color3.fromRGB(255, 0, 0)
@@ -64,7 +62,6 @@ if _G.HyperPetActive then
                 sky.SkyboxUp = "rbxassetid://2634494"
             end)
 
-            -- CIZIRTI / STATİK SES
             local staticSound = Instance.new("Sound")
             staticSound.SoundId = "rbxassetid://9114223178"
             staticSound.Volume = 4
@@ -72,7 +69,6 @@ if _G.HyperPetActive then
             staticSound.Parent = SoundService
             staticSound:Play()
 
-            -- 2. EKRAN KAPLAMA VE KELİME SPAM SİSTEMİ
             local pGui = localPlayer:WaitForChild("PlayerGui")
             local punishGui = Instance.new("ScreenGui")
             punishGui.Name = "HyperPunishGui"
@@ -88,12 +84,11 @@ if _G.HyperPetActive then
             local words = {"RUN", "HIDE", "ITS COMING", "PUNISHMENT", "NO ESCAPE"}
             local isPunishing = true
 
-            -- 30 SANİYE BOYUNCA MAKSİMUM SESLE OOF SPAMI
             task.spawn(function()
                 while isPunishing do
                     local oof = Instance.new("Sound")
                     oof.SoundId = "rbxassetid://5143383166"
-                    oof.Volume = 10 -- Maksimum Ses
+                    oof.Volume = 10
                     oof.Parent = SoundService
                     oof:Play()
                     game:GetService("Debris"):AddItem(oof, 1.5)
@@ -101,7 +96,6 @@ if _G.HyperPetActive then
                 end
             end)
 
-            -- 30 SANİYE BOYUNCA EKRANDA GEZEN TITREŞEN YAZILAR
             task.spawn(function()
                 while isPunishing do
                     local txtLbl = Instance.new("TextLabel")
@@ -129,7 +123,6 @@ if _G.HyperPetActive then
                 end
             end)
 
-            -- 30 SANİYE BEKLEME VE OYUNDAN ATILMA
             task.wait(30)
             isPunishing = false
             localPlayer:Kick("YOU ARE PUNISHED")
@@ -196,7 +189,6 @@ eyeFrame.BackgroundTransparency = 1
 eyeFrame.Parent = eyeGUI
 
 local eyeL, eyeR
-
 local function createBigHappyEye(isLeft)
     local eye = Instance.new("Frame")
     eye.Size = UDim2.new(0, 34, 0, 20)
@@ -227,7 +219,8 @@ local function updatePetCFrame(cf)
 end
 
 petModel.Parent = workspace
--- [[ HYPER|HUB - PART 2: TOUCH & DRAGGABLE MENU SYSTEM ]]
+
+-- TAKİP SİSTEMİ
 local isFollowing = true
 local currentPetPos = hrp.Position + (hrp.CFrame.LookVector * 4.5) + Vector3.new(0, 1.2, 0)
 local bounceOffsetY = 0
@@ -342,93 +335,15 @@ task.spawn(function()
         end
 
         canClick = false
-        local clickX = currentClickPos.X
-        local clickY = currentClickPos.Y
-
         overlay:Destroy()
+
+        -- [[ ANA HYPER|FPS SCRİPTİNE TETİK SİNYALİ VERİLDİ ]]
+        _G.HyperMainStart = true
 
         pcall(function() Chat:Chat(head, "enjoy using the script!", Enum.ChatColor.White) end)
         triggerSmoothBounce()
 
-        -- TIKLANAN NOKTADA AÇILAN ORTA MENÜ
-        local menuFrame = Instance.new("Frame")
-        menuFrame.Name = "DynamicMenu"
-        menuFrame.Size = UDim2.new(0, 0, 0, 0)
-        menuFrame.Position = UDim2.new(0, clickX, 0, clickY)
-        menuFrame.AnchorPoint = Vector2.new(0.5, 0.5)
-        menuFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 28)
-        menuFrame.BackgroundTransparency = 0.2
-        menuFrame.Parent = screenGui
-        Instance.new("UICorner", menuFrame).CornerRadius = UDim.new(0, 12)
-
-        local stroke = Instance.new("UIStroke", menuFrame)
-        stroke.Color = Color3.fromRGB(0, 162, 255)
-        stroke.Thickness = 1.5
-
-        local testLabel = Instance.new("TextLabel")
-        testLabel.Size = UDim2.new(1, -40, 0, 30)
-        testLabel.Position = UDim2.new(0, 12, 0, 10)
-        testLabel.BackgroundTransparency = 1
-        testLabel.Font = Enum.Font.SourceSansBold
-        testLabel.Text = "TESTING"
-        testLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
-        testLabel.TextSize = 16
-        testLabel.TextXAlignment = Enum.TextXAlignment.Left
-        testLabel.Parent = menuFrame
-
-        local btnMin = Instance.new("TextButton")
-        btnMin.Size = UDim2.new(0, 26, 0, 26)
-        btnMin.Position = UDim2.new(1, -32, 0, 8)
-        btnMin.BackgroundColor3 = Color3.fromRGB(40, 40, 50)
-        btnMin.Font = Enum.Font.SourceSansBold
-        btnMin.Text = "-"
-        btnMin.TextColor3 = Color3.fromRGB(255, 255, 255)
-        btnMin.TextSize = 18
-        btnMin.Parent = menuFrame
-        Instance.new("UICorner", btnMin).CornerRadius = UDim.new(0, 6)
-
-        TweenService:Create(menuFrame, TweenInfo.new(0.4, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {
-            Size = UDim2.new(0, 220, 0, 140)
-        }):Play()
-
-        local isMinimized = false
-        btnMin.MouseButton1Click:Connect(function()
-            isMinimized = not isMinimized
-            if isMinimized then
-                TweenService:Create(menuFrame, TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
-                    Size = UDim2.new(0, 220, 0, 42)
-                }):Play()
-                testLabel.Text = "TESTING (Minimized)"
-            else
-                TweenService:Create(menuFrame, TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
-                    Size = UDim2.new(0, 220, 0, 140)
-                }):Play()
-                testLabel.Text = "TESTING"
-            end
-        end)
-
-        local dragging, dragStart, startPos
-        menuFrame.InputBegan:Connect(function(inp)
-            if inp.UserInputType == Enum.UserInputType.MouseButton1 or inp.UserInputType == Enum.UserInputType.Touch then
-                dragging = true
-                dragStart = inp.Position
-                startPos = menuFrame.Position
-            end
-        end)
-
-        UserInputService.InputChanged:Connect(function(inp)
-            if dragging and (inp.UserInputType == Enum.UserInputType.MouseMovement or inp.UserInputType == Enum.UserInputType.Touch) then
-                local delta = inp.Position - dragStart
-                menuFrame.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
-            end
-        end)
-
-        UserInputService.InputEnded:Connect(function(inp)
-            if inp.UserInputType == Enum.UserInputType.MouseButton1 or inp.UserInputType == Enum.UserInputType.Touch then
-                dragging = false
-            end
-        end)
-
+        -- MASKOTU YUMUŞAKÇA SİLME
         task.wait(1.5)
         isFollowing = false
         if followConn then followConn:Disconnect() end
@@ -452,4 +367,3 @@ task.spawn(function()
         _G.HyperPause = nil
     end)
 end)
-
